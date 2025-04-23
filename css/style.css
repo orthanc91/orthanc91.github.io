@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+}
+#app {
+  display: flex;
+  width: 100%;
+}
+#sidebar {
+  width: 250px;
+  background: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: auto;
+}
+#mainContent {
+  flex: 1;
+  padding: 20px;
+}
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+#categoryList li {
+  cursor: pointer;
+  margin: 5px 0;
+}

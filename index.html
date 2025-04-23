@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADMX Viewer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <h2>Policy Categories</h2>
+      <ul id="categoryList">
+        <!-- Categories will be injected here -->
+      </ul>
+    </aside>
+
+    <main id="mainContent">
+      <header>
+        <input type="text" id="searchInput" placeholder="Search policies...">
+      </header>
+      <section id="policyDetails">
+        <h2>Select a policy to view details</h2>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    async function loadPolicies() {
+      const response = await fetch('data/accountnotifications.json');
+      const policies = await response.json();
+
+      const categoryList = document.getElementById('categoryList');
+      const searchInput = document.getElementById('searchInput');
+      const policyDetails = document.getElementById('policyDetails');
+
+      function renderPolicyDetails(policy) {
+        policyDetails.innerHTML = `
+          <h2>${policy.name}</h2>
+          <p><strong>Description:</strong> ${policy.description}</p>
+          <p><strong>Registry Key:</strong> ${policy.registryKey}</p>
+          <p><strong>Value Name:</strong> ${policy.valueName}</p>
+          <p><strong>On Value:</strong> ${policy.onValue}</p>
+          <p><strong>Off Value:</strong> ${policy.offValue}</p>
+        `;
+      }
+
+      function renderList(filteredPolicies) {
+        categoryList.innerHTML = '';
+        filteredPolicies.forEach(policy => {
+          const li = document.createElement('li');
+          li.textContent = policy.name;
+          li.onclick = () => renderPolicyDetails(policy);
+          categoryList.appendChild(li);
+        });
+      }
+
+      renderList(policies);
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        const filtered = policies.filter(p =>
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+        );
+        renderList(filtered);
+      });
+    }
+
+    window.onload = loadPolicies;
+  </script>
+</body>
+</html>
